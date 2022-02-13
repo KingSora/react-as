@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "es2016",
+    "declaration": false,
+    "sourceMap": true
+  },
+  "exclude": ["node_modules", "**/node_modules/*"]
+}

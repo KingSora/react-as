@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "outDir": "types",
+    "strict": true,
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "target": "ESNext",
+    "sourceMap": false,
+    "jsx": "react",
+    "declaration": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "removeComments": false
+  },
+  "exclude": ["node_modules", "**/node_modules/*"]
+}
