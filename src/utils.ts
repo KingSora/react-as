@@ -3,36 +3,58 @@ import { Strategy, ComponentType, ValidComponentType, InputComponent, InputCompo
 
 export const isString = (value: unknown): value is string => typeof value === 'string';
 export const isFunction = (value: unknown): value is (...args: any) => any => typeof value === 'function';
-export const isObject = (value: unknown): value is object => !!value && typeof value === 'object';
 export const isSymbol = (value: unknown): value is symbol => typeof value === 'symbol';
+export const isObject = (value: unknown): value is object => !!value && typeof value === 'object';
 
-export const renderComponentOrComponentType = (component?: InputComponent) =>
+/**
+ * Creates a ReactElement out of the passed component or componentType.
+ * @param component The passed component or componentType.
+ * @returns A ReactElement which was created from the input.
+ */
+export const renderComponentOrComponentType = (component?: InputComponent): ReactElement =>
   isValidElement(component) ? cloneElement(component) : createElement(component as Exclude<InputComponent, JSX.Element>);
 
+/**
+ * Overwrites the passed props with the passed overwrite function.
+ * @param overwritePropsFunction The function which overwrites the passed props.
+ * @param componentProps The component props.
+ * @param asProps The "as" component props.
+ * @returns The overwritten props.
+ */
 export const getOverwrittenProps = <CompProps, AsProps>(
   overwritePropsFunction: OverwriteProps<CompProps, AsProps> | undefined,
   componentProps: CompProps,
   asProps: AsProps
-): [CompProps, AsProps] => {
+): CompProps & AsProps => {
   const result = isFunction(overwritePropsFunction) ? overwritePropsFunction(componentProps, asProps) : null;
-
-  return Array.isArray(result) ? result : [componentProps, asProps];
+  return isObject(result) && !Array.isArray(result) ? result : { ...componentProps, ...asProps };
 };
 
-// get the element according to the passed strategy
-export const getStrategyElement = (component: ValidComponentType, as: ComponentType, strategy: Strategy): ComponentType => {
+/**
+ * Gets the correct component type according to the passed strategy
+ * @param componentType The component type.
+ * @param asType The "as" component type.
+ * @param strategy The strategy.
+ * @returns Either the component or "as" component type depending on the strategy.
+ */
+export const getStrategyElement = (componentType: ValidComponentType, asType: ComponentType, strategy: Strategy): ComponentType => {
   switch (strategy) {
     case 'leave': {
-      return (isString(component) && as) || component;
+      return (isString(componentType) && asType) || componentType;
     }
     case 'wrap':
     default: {
-      return as;
+      return asType;
     }
   }
 };
 
-// normalize input of components
+/**
+ * Gets the component type of the passed component or component type. (normalize input of components)
+ * @param component The component or component type.
+ * @param acceptObj Whether the resulting component type can be an object (fragments etc. are special component types which are objects)
+ * @returns A tuple with the final component type and its props.
+ */
 export const getTypeAndProps = <C extends InputComponent, B extends boolean>(
   component: C,
   acceptObj: B

@@ -348,7 +348,7 @@ describe('As Component', () => {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { children: childrenAs, ...restAs } = asProps;
 
-          return [{ ...restComp, children: childrenOverwrittenStr }, restAs];
+          return { ...restComp, children: childrenOverwrittenStr, ...restAs };
         },
       });
 
@@ -366,7 +366,7 @@ describe('As Component', () => {
           expect(asProps).not.toBeNull();
           expect(typeof asProps).toBe('object');
 
-          return [componentProps, asProps];
+          return { ...componentProps, ...asProps };
         },
       };
 
@@ -378,7 +378,7 @@ describe('As Component', () => {
     });
 
     test('Overwrite props are ignored with incorrect return', () => {
-      const returnsToTest = [undefined, null, {}, 1, '1', false];
+      const returnsToTest = [undefined, null, [], 1, '1', false];
 
       returnsToTest.forEach((returnedValue) => {
         const childrenComp = 'component child';

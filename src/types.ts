@@ -22,7 +22,7 @@ export type Strategy = 'leave' | 'wrap';
 export type OverwriteProps<CompProps = ComponentPropsDefault, AsProps = ComponentPropsDefault> = (
   compProps: CompProps,
   asProps: AsProps
-) => [CompProps, AsProps];
+) => CompProps & AsProps;
 
 export interface Options<CompProps = ComponentPropsDefault, AsProps = ComponentPropsDefault> {
   // The strategy how to continue in case the process would fail.

@@ -94,7 +94,7 @@ const getModifiedComponentType = (
 };
 
 /**
- * Creates a new component where the resulting component is transformed into the "as" component.
+ * Creates a new component where the passed component is transformed into the "as" component.
  * @param component The component which shall be transformed.
  * @param as The component into which the input component shall be transformed.
  * @param options The options for the transformation.
@@ -115,7 +115,7 @@ export const transform: Transform = (component?, as?, options?) => {
   const cacheOptions = cache ? strategy + recursive : '';
   const [componentType, componentProps] = getTypeAndProps(component, false);
   const [asType, asProps] = getTypeAndProps(as, true);
-  const [overwrittenComponentProps, overwrittenAsProps] = getOverwrittenProps(overwriteProps, componentProps, asProps);
+  const overwrittenProps = getOverwrittenProps(overwriteProps, componentProps, asProps);
 
   const cacheEntry = cache && getCacheEntry(componentType, asType, cacheOptions);
 
@@ -133,9 +133,14 @@ export const transform: Transform = (component?, as?, options?) => {
     );
 
   // @ts-ignore
-  return <Elm {...overwrittenComponentProps} {...overwrittenAsProps} />;
+  return <Elm {...overwrittenProps} />;
 };
 
+/**
+ * Transforms the passed component into the passed "as" component.
+ * @param props The props.
+ * @returns A new component which is the resulting transformed component.
+ */
 const As: AsComponent = ({ component, as, options }) => transform(component, as, options);
 
 export default As;
