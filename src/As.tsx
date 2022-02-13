@@ -12,13 +12,13 @@ export interface AsProps<C extends InputComponent = InputComponent, A extends In
   options?: Partial<Options<InputComponentProps<C>, InputComponentProps<A>>>;
 }
 
-type AsComponent<C extends InputComponent = InputComponent, A extends InputComponent = InputComponent> = (
+type AsComponent = <C extends InputComponent = InputComponent, A extends InputComponent = InputComponent>(
   props: AsProps<C, A>
 ) => ReactElement | null;
 
-type Transform<C extends InputComponent = InputComponent, A extends InputComponent = InputComponent> = (
+type Transform = <C extends InputComponent, A extends InputComponent>(
   component?: AsProps<C, A>['component'],
-  as?: AsProps<C, A>['component'],
+  as?: AsProps<C, A>['as'],
   options?: AsProps<C, A>['options']
 ) => ReturnType<AsComponent>;
 
