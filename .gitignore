@@ -3,9 +3,11 @@
 # dependencies
 node_modules/
 
-# dist
-example/dist/
-example/build/
+# coverage
+coverage/
+
+#dist
+dist/
 
 # local env files
 .env.local

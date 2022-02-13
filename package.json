@@ -53,6 +53,6 @@
   },
   "scripts": {
     "build": "rollup -c",
-    "test": "jest"
+    "test": "jest --coverage=true"
   }
 }

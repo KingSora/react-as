@@ -1,6 +1,6 @@
 import React, { ReactElement, ReactNode, Component, createElement, Fragment } from 'react';
 import { getCacheEntry, setCacheEntry } from './cache';
-import { isBoolean, isFunction, renderComponentOrComponentType, getTypeAndProps, getStrategyElement, getOverwrittenProps, isObject } from './utils';
+import { isFunction, renderComponentOrComponentType, getTypeAndProps, getStrategyElement, getOverwrittenProps, isObject } from './utils';
 import { InputComponent, InputComponentProps, ComponentType, CallableComponentType, ValidComponentType, Options } from './types';
 
 export interface AsProps<C extends InputComponent = InputComponent, A extends InputComponent = InputComponent> {
@@ -102,14 +102,13 @@ const getModifiedComponentType = (
  */
 export const transform: Transform = (component?, as?, options?) => {
   const { strategy = 'wrap', recursive = true, cache = true, overwriteProps } = options || {};
-
   if (!component && !as) {
     return null;
   }
-  if (!component || isBoolean(component)) {
+  if (!component) {
     return renderComponentOrComponentType(as);
   }
-  if (!as || isBoolean(as)) {
+  if (!as) {
     return renderComponentOrComponentType(component);
   }
 
