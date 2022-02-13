@@ -1,0 +1,11 @@
+import { ReactElement } from 'react';
+import { Strategy, ComponentType, ValidComponentType, InputComponent, InputComponentProps, OverwriteProps } from './types';
+export declare const isString: (value: unknown) => value is string;
+export declare const isFunction: (value: unknown) => value is (...args: any) => any;
+export declare const isObject: (value: unknown) => value is object;
+export declare const isBoolean: (value: unknown) => value is boolean;
+export declare const isSymbol: (value: unknown) => value is symbol;
+export declare const renderComponentOrComponentType: (component?: InputComponent | undefined) => ReactElement<unknown, string | import("react").JSXElementConstructor<any>>;
+export declare const getOverwrittenProps: <CompProps, AsProps>(overwritePropsFunction: OverwriteProps<CompProps, AsProps> | undefined, componentProps: CompProps, asProps: AsProps) => [CompProps, AsProps];
+export declare const getStrategyElement: (component: ValidComponentType, as: ComponentType, strategy: Strategy) => ComponentType;
+export declare const getTypeAndProps: <C extends InputComponent, B extends boolean>(component: C, acceptObj: B) => [B extends false ? ValidComponentType : ComponentType, InputComponentProps<C>];
