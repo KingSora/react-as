@@ -1,10 +1,10 @@
 import { isValidElement, cloneElement, createElement, ExoticComponent, ForwardRefRenderFunction, ReactElement } from 'react';
 import { Strategy, ComponentType, ValidComponentType, InputComponent, InputComponentProps, OverwriteProps } from './types';
 
-export const isSymbol = (value: unknown): value is symbol => typeof value === 'symbol';
 export const isString = (value: unknown): value is string => typeof value === 'string';
 export const isFunction = (value: unknown): value is (...args: any) => any => typeof value === 'function';
 export const isObject = (value: unknown): value is object => !!value && typeof value === 'object';
+export const isSymbol = (value: unknown): value is symbol => typeof value === 'symbol';
 
 export const renderComponentOrComponentType = (component?: InputComponent) =>
   isValidElement(component) ? cloneElement(component) : createElement(component as Exclude<InputComponent, JSX.Element>);

@@ -3,8 +3,8 @@ import React, { useRef, useState, useCallback } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import * as cache from './cache';
-import As from './As';
+import * as cache from '../src/cache';
+import As from '../src/As';
 
 const cacheGetSpy = jest.spyOn(cache, 'getCacheEntry');
 const cacheSetSpy = jest.spyOn(cache, 'setCacheEntry');
