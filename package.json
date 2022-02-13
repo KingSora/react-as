@@ -19,12 +19,13 @@
     "frontend"
   ],
   "files": [
-    "src",
-    "dist",
+    "./src",
+    "./dist",
     "README.md",
     "LICENSE"
   ],
-  "main": "index.js",
+  "main": "./dist/react-as.umd.js",
+  "module": "./dist/react-as.esm.js",
   "peerDependencies": {
     "react": ">=16.0.0"
   },
