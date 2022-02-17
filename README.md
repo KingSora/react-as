@@ -4,7 +4,7 @@ Render react components as other components.
 ## Why?
 While developing with `react` I've experienced the need to adjust the tag or element type of my components. This was especially needed if I wanted the appearance of one component but the functionality of an other. Like rendering a `Link` as a `Button`, the link should have the functionality (and markup) of the `Link` component but the appearance of the `Button` component.
 
-#### How was this solved until now?
+### How was this solved until now?
 
 The solution was to introduce an `component`, `tag` or `as` property to the components which had the appearance but not the functionality. In the `Link` and `Button` example the `Button` would receive such an property. Many popular libraries are doing like this: [MUI](https://mui.com/api/button/#props), [Ant Design](https://ant.design/components/button/#API), [react-bootstrap](https://react-bootstrap.github.io/components/buttons/#button-props). The problem is that if more components should receive the functionality of the `Link` component, the property needs to be re-implement over and over again for each component. And this is where `react-as` comes in! **Not only can `react-as` replicate the current solution, its also possible to give the `Link` component the `as` prop instead of the `Button`.**
 
@@ -12,7 +12,7 @@ The solution was to introduce an `component`, `tag` or `as` property to the comp
 
 The package comes with the `As` react component and the `transform` function. Both are exactly the same, but you can choose when to use what.
 
-```js
+```jsx
 import As, { transform } from "react-as";
 import { Link } from "react-router-dom";
 import Button from "./Button";
@@ -54,7 +54,7 @@ As already mentioned, the package has two main functions:
 Both are doing exactly the same. The `As` component is just a wrapper for the `transform` function.
 
 
-#### As Component Props
+### As Component Props
 
 All props are optional and can be `null` or `undefined` as well.
 
@@ -87,7 +87,7 @@ All props are optional and can be `null` or `undefined` as well.
     </tr>
 </table>
 
-#### Options
+### Options
 
 The options object gives you more control of the transformation process.
 
@@ -129,7 +129,7 @@ The options object gives you more control of the transformation process.
     </tr>
 </table>
 
-#### OverwriteProps
+### OverwriteProps
 
 This functions allows you to control which properties are passed to the transformed component.
 The function takes the `componentProps` as its first argument, the `"as" component props` as its second argument and should return an object which represents the `final props` which are passed to the resulting component.
@@ -143,11 +143,11 @@ type OverwriteProps<CompProps, AsProps> = (
 ) => CompProps & AsProps;
 ```
 
-#### Types
+### Types
 
 The package comes with the `InputComponentProps` helper type which is here to help you write a correctly typed `OverwriteProps` function. Because `typescript` can't interfere the type of a `JSX.Element` you have to do it yourself, For all other cases the `OverwriteProps` can interfere the correct `props` type for you automatically.
 
-```ts
+```tsx
 import As, { InputComponentProps }  from 'react-as';
 
 <As
