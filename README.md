@@ -1,6 +1,13 @@
 # react-as
-Render react components as other components.
-[Try it on the playground](https://stackblitz.com/edit/react-as-playground).
+<center>Render react components as other components.
+[Try it on the playground](https://stackblitz.com/edit/react-as-playground)
+</center>
+
+<h6 align="center">
+    <a href="https://github.com/facebook/react/"><img src="https://img.shields.io/badge/React-%3E%3D16.0.0-61dafb?style=flat-square&logo=React" alt="React"></a>
+    <a href="https://www.npmjs.com/package/react-as"><img src="https://img.shields.io/npm/v/react-as.svg?style=flat-square" alt="Version"></a>
+    <a href="https://github.com/KingSora/react-as/blob/master/LICENSE"><img src="https://img.shields.io/github/license/kingsora/react-as.svg?style=flat-square" alt="License"></a>
+</h6>
 
 ![Alt text](demo.png?raw=true "Demo Image")
 
