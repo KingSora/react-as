@@ -1,7 +1,7 @@
 # react-as
-<center>Render react components as other components.
-[Try it on the playground](https://stackblitz.com/edit/react-as-playground)
-</center>
+<div align="center">Render react components as other components.
+	<a href="https://stackblitz.com/edit/react-as-playground">Try it on the playground</a>
+</div>
 
 <h6 align="center">
     <a href="https://github.com/facebook/react/"><img src="https://img.shields.io/badge/React-%3E%3D16.0.0-61dafb?style=flat-square&logo=React" alt="React"></a>
