@@ -1,6 +1,7 @@
-# react-as
-<div align="center">Render react components as other components.
-	<a href="https://stackblitz.com/edit/react-as-playground">Try it on the playground</a>
+<h1 align="center">react-as</h1>
+<div align="center">
+        Render react components as other components.
+	<a href="https://stackblitz.com/edit/react-as-playground">Try it on the playground</a>.
 </div>
 
 <h6 align="center">
