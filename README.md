@@ -52,10 +52,6 @@ Simply put the library traverses the root elements of your component until it en
 
 If the deepest root element is not an intrinsic type but something else, the transformation is considered unsuccessful and you can decide with the `strategy` option how to handle the case. 
 
-To not transform already known results over and over again, the library has a caching system where you can opt. out from with the `cache` option if you want.
-
-
-
 ## API
 
 As already mentioned, the package has two main functions:
@@ -127,23 +123,17 @@ The options object gives you more control of the transformation process.
         <td>Try to transform the component recursively if the transformation isn't successful after the first iteration.</td>
     </tr>
     <tr>
-        <td>cache</td>
-        <td><code>boolean</code></td>
-        <td><code>true</code></td>
-        <td>Whether to use cache instead of transforming already known results again.</td>
-    </tr>
-    <tr>
         <td>overwriteProps</td>
         <td><code>OverwriteProps</code></td>
         <td><code>undefined</code></td>
-        <td>A function which gets the props of both components as arguments and returns a object with the combined adapted props.</td>
+        <td>A function which gets the props of both components as arguments and returns a tuple with the overwritten props.</td>
     </tr>
 </table>
 
 ### OverwriteProps
 
 This functions allows you to control which properties are passed to the transformed component.
-The function takes the `componentProps` as its first argument, the `"as" component props` as its second argument and should return an object which represents the `final props` which are passed to the resulting component.
+The function takes the `componentProps` as its first argument, the `"as" component props` as its second argument and should return an tuple which represents the overwritten props.
 
 The simplified typescript type declaration is:
 
@@ -151,7 +141,7 @@ The simplified typescript type declaration is:
 type OverwriteProps<CompProps, AsProps> = (
   compProps: CompProps,
   asProps: AsProps
-) => CompProps & AsProps;
+) => [CompProps, AsProps];
 ```
 
 ### Types
@@ -165,10 +155,7 @@ import As, { InputComponentProps }  from 'react-as';
   component={<div>Div as Paragraph</div>}
   as={<MyComponent />}
   options={{
-    overwriteProps: (componentProps: InputComponentProps<'div'>, asProps: InputComponentProps<MyComponent>) => ({
-      ...componentProps,
-      ...asProps,
-    }),
+    overwriteProps: (componentProps: InputComponentProps<'div'>, asProps: InputComponentProps<typeof MyComponent>) => [componentProps, asProps],
   }}
 />
 ```

@@ -21,7 +21,7 @@ export type Strategy = 'leave' | 'wrap';
 export type OverwriteProps<CompProps = ComponentPropsDefault, AsProps = ComponentPropsDefault> = (
   compProps: CompProps,
   asProps: AsProps
-) => CompProps & AsProps;
+) => [CompProps, AsProps];
 
 /**
  * Options used to customize the component transformation process.
@@ -31,9 +31,7 @@ export interface Options<CompProps = ComponentPropsDefault, AsProps = ComponentP
   strategy: Strategy;
   // Try to transform the component recursively if the transformation isn't successful after the first iteration.
   recursive: boolean;
-  // Whether to use cache instead of transforming already known results again.
-  cache: boolean;
-  // A function which gets the props of both components as arguments and returns a object with the combined adapted props.
+  // A function which gets the props of both components as arguments and returns a tuple with the overwritten props.
   overwriteProps: OverwriteProps<CompProps, AsProps>;
 }
 

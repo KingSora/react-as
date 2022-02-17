@@ -1,7 +1,14 @@
 import React, { ReactElement, ReactNode, Component, createElement, Fragment } from 'react';
-import { getCacheEntry, setCacheEntry } from './cache';
 import { isFunction, renderComponentOrComponentType, getTypeAndProps, getStrategyElement, getOverwrittenProps, isObject } from './utils';
-import { InputComponent, InputComponentProps, ComponentType, CallableComponentType, ValidComponentType, Options } from './types';
+import {
+  InputComponent,
+  InputComponentProps,
+  ComponentType,
+  CallableComponentType,
+  ValidComponentType,
+  Options,
+  ComponentPropsDefault,
+} from './types';
 
 export interface AsProps<C extends InputComponent = InputComponent, A extends InputComponent = InputComponent> {
   // The component which shall be transformed.
@@ -29,9 +36,21 @@ type Transform = <C extends InputComponent, A extends InputComponent>(
  * @param options The options for the transformation.
  * @returns A modified version of the passed base render function.
  */
+
+/**
+ *
+ * @param renderFunc
+ * @param as
+ * @param componentProps
+ * @param asProps
+ * @param options
+ * @returns
+ */
 const createModifiedRenderFunc = (
   renderFunc: CallableComponentType | (() => ReactNode),
   as: ComponentType,
+  componentProps: ComponentPropsDefault,
+  asProps: ComponentPropsDefault,
   options: Omit<Options, 'overwriteProps'>
 ): CallableComponentType => {
   const { strategy, recursive } = options;
@@ -44,12 +63,13 @@ const createModifiedRenderFunc = (
     const defaultType = validRootElm ? as : () => <Fragment>{rootElm}</Fragment>;
     const { props, type = defaultType } = validRootElm ? (rootElm as ReactElement) : { props: args[0] };
 
-    return isFunction(type) && recursive ? (
-      <As component={createElement(type, props)} as={as} options={options} />
-    ) : (
-      // @ts-ignore
-      createElement(getStrategyElement(type, as, strategy), props)
-    );
+    if (isFunction(type) && recursive) {
+      return <As component={createElement(type, props)} as={as} options={options} />;
+    }
+
+    const finalType = getStrategyElement(type, as, strategy);
+    // @ts-ignore
+    return createElement(finalType, { ...(finalType === as ? asProps : componentProps), ...props });
   };
 };
 
@@ -61,10 +81,12 @@ const createModifiedRenderFunc = (
  * @returns The modified component type.
  */
 const getModifiedComponentType = (
-  componentType: ValidComponentType,
-  asType: ComponentType,
+  componentTypeProps: [ValidComponentType, ComponentPropsDefault],
+  asTypeProps: [ComponentType, ComponentPropsDefault],
   options: Omit<Options, 'overwriteProps'>
 ): ComponentType => {
+  const [componentType, componentProps] = componentTypeProps;
+  const [asType, asProps] = asTypeProps;
   const isClassComponent = (componentType as any).prototype?.isReactComponent;
   const isFunctionComponent = isFunction(componentType);
 
@@ -82,13 +104,13 @@ const getModifiedComponentType = (
 
     // modify the render function of the new component
     const prototype = ModifiedClass.prototype;
-    prototype.render = createModifiedRenderFunc(prototype.render, asType, options);
+    prototype.render = createModifiedRenderFunc(prototype.render, asType, componentProps, asProps, options);
     return ModifiedClass;
   }
 
   return isFunctionComponent
     ? // create new component
-      createModifiedRenderFunc(componentType as CallableComponentType, asType, options)
+      createModifiedRenderFunc(componentType as CallableComponentType, asType, componentProps, asProps, options)
     : // choose from the input components depending on strategy
       getStrategyElement(componentType, asType, options.strategy);
 };
@@ -101,7 +123,7 @@ const getModifiedComponentType = (
  * @returns The resulting component.
  */
 export const transform: Transform = (component?, as?, options?) => {
-  const { strategy = 'wrap', recursive = true, cache = true, overwriteProps } = options || {};
+  const { strategy = 'wrap', recursive = true, overwriteProps } = options || {};
   if (!component && !as) {
     return null;
   }
@@ -112,28 +134,17 @@ export const transform: Transform = (component?, as?, options?) => {
     return renderComponentOrComponentType(component);
   }
 
-  const cacheOptions = cache ? strategy + recursive : '';
   const [componentType, componentProps] = getTypeAndProps(component, false);
   const [asType, asProps] = getTypeAndProps(as, true);
-  const overwrittenProps = getOverwrittenProps(overwriteProps, componentProps, asProps);
+  const [overwrittenComponentProps, overwrittenAsProps] = getOverwrittenProps(overwriteProps, componentProps, asProps);
 
-  const cacheEntry = cache && getCacheEntry(componentType, asType, cacheOptions);
-
-  const Elm =
-    cacheEntry ||
-    setCacheEntry(
-      componentType,
-      asType,
-      cacheOptions,
-      getModifiedComponentType(componentType, asType, {
-        strategy,
-        recursive,
-        cache,
-      })
-    );
+  const Elm = getModifiedComponentType([componentType, overwrittenComponentProps], [asType, overwrittenAsProps], {
+    strategy,
+    recursive,
+  });
 
   // @ts-ignore
-  return <Elm {...overwrittenProps} />;
+  return <Elm {...overwrittenComponentProps} {...overwrittenAsProps} />;
 };
 
 /**

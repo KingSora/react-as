@@ -3,11 +3,7 @@ import React, { useRef, useState, useCallback } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import * as cache from '../src/cache';
 import As from '../src/As';
-
-const cacheGetSpy = jest.spyOn(cache, 'getCacheEntry');
-const cacheSetSpy = jest.spyOn(cache, 'setCacheEntry');
 
 const clickTestId = 'click';
 const fixedAttributeName = 'data-fixed';
@@ -92,43 +88,6 @@ const getContainerProp = (container, prop) => container?.firstElementChild?.getA
 const renderAs = (component, as, options) => render(<As component={component} as={as} options={options} />);
 
 describe('As Component', () => {
-  describe('Cache', () => {
-    beforeEach(() => {
-      cacheGetSpy.mockClear();
-      cacheSetSpy.mockClear();
-    });
-
-    test('Repeating calls use cache', () => {
-      const componentCache = () => <ProxyFragment comp="a" />;
-      const asCache = () => <ProxyFragment comp="b" />;
-
-      expect(cacheGetSpy).not.toHaveBeenCalled();
-      expect(cacheSetSpy).not.toHaveBeenCalled();
-
-      renderAs(componentCache, asCache);
-
-      expect(cacheGetSpy).toHaveBeenCalled();
-      expect(cacheSetSpy).toHaveBeenCalled();
-
-      const setCalls = cacheSetSpy.mock.calls;
-
-      renderAs(componentCache, asCache);
-
-      expect(cacheSetSpy.mock.calls).toBe(setCalls);
-    });
-
-    test('Opt out of cache', () => {
-      const componentCache = () => <ProxyFragment comp="a" />;
-      const asCache = () => <ProxyFragment comp="b" />;
-
-      expect(cacheGetSpy).not.toHaveBeenCalled();
-
-      renderAs(componentCache, asCache, { cache: false });
-
-      expect(cacheGetSpy).not.toHaveBeenCalled();
-    });
-  });
-
   describe('Passed component or passed "as"-component is null', () => {
     const testComponents = ['div', 'section', FunctionComponent, FunctionComponentB, ClassComponent, ClassComponentB]
       .map((componentType) => {
@@ -348,7 +307,7 @@ describe('As Component', () => {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { children: childrenAs, ...restAs } = asProps;
 
-          return { ...restComp, children: childrenOverwrittenStr, ...restAs };
+          return [{ ...restComp, children: childrenOverwrittenStr }, restAs];
         },
       });
 
@@ -366,7 +325,7 @@ describe('As Component', () => {
           expect(asProps).not.toBeNull();
           expect(typeof asProps).toBe('object');
 
-          return { ...componentProps, ...asProps };
+          return [componentProps, asProps];
         },
       };
 
@@ -378,7 +337,7 @@ describe('As Component', () => {
     });
 
     test('Overwrite props are ignored with incorrect return', () => {
-      const returnsToTest = [undefined, null, [], 1, '1', false];
+      const returnsToTest = [undefined, null, {}, 1, '1', false];
 
       returnsToTest.forEach((returnedValue) => {
         const childrenComp = 'component child';

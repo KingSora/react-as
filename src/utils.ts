@@ -25,9 +25,9 @@ export const getOverwrittenProps = <CompProps, AsProps>(
   overwritePropsFunction: OverwriteProps<CompProps, AsProps> | undefined,
   componentProps: CompProps,
   asProps: AsProps
-): CompProps & AsProps => {
+): [CompProps, AsProps] => {
   const result = isFunction(overwritePropsFunction) ? overwritePropsFunction(componentProps, asProps) : null;
-  return isObject(result) && !Array.isArray(result) ? result : { ...componentProps, ...asProps };
+  return Array.isArray(result) ? result : [componentProps, asProps];
 };
 
 /**
@@ -37,7 +37,7 @@ export const getOverwrittenProps = <CompProps, AsProps>(
  * @param strategy The strategy.
  * @returns Either the component or "as" component type depending on the strategy.
  */
-export const getStrategyElement = (componentType: ValidComponentType, asType: ComponentType, strategy: Strategy): ComponentType => {
+export const getStrategyElement = (componentType: ComponentType, asType: ComponentType, strategy: Strategy): ComponentType => {
   switch (strategy) {
     case 'leave': {
       return (isString(componentType) && asType) || componentType;
