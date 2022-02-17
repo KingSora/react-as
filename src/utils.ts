@@ -11,7 +11,7 @@ export const isObject = (value: unknown): value is object => !!value && typeof v
  * @param component The passed component or componentType.
  * @returns A ReactElement which was created from the input.
  */
-export const renderComponentOrComponentType = (component?: InputComponent): ReactElement =>
+export const renderComponentOrComponentType = (component?: InputComponent | null): ReactElement =>
   isValidElement(component) ? cloneElement(component) : createElement(component as Exclude<InputComponent, JSX.Element>);
 
 /**

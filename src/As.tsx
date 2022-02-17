@@ -4,12 +4,12 @@ import { isFunction, renderComponentOrComponentType, getTypeAndProps, getStrateg
 import { InputComponent, InputComponentProps, ComponentType, CallableComponentType, ValidComponentType, Options } from './types';
 
 export interface AsProps<C extends InputComponent = InputComponent, A extends InputComponent = InputComponent> {
-  // The component to be transformed.
-  component?: C | InputComponent;
-  // The "as" component.
-  as?: A | InputComponent;
+  // The component which shall be transformed.
+  component?: C | InputComponent | null;
+  // The component into which the input component shall be transformed.
+  as?: A | InputComponent | null;
   // Options for the component behavior.
-  options?: Partial<Options<InputComponentProps<C>, InputComponentProps<A>>>;
+  options?: Partial<Options<InputComponentProps<C>, InputComponentProps<A>>> | null;
 }
 
 type AsComponent = <C extends InputComponent = InputComponent, A extends InputComponent = InputComponent>(
@@ -26,7 +26,7 @@ type Transform = <C extends InputComponent, A extends InputComponent>(
  * Creates a modified version of the passed base render function
  * @param renderFunc The base render function of the component.
  * @param as The "as" component type.
- * @param options The options.
+ * @param options The options for the transformation.
  * @returns A modified version of the passed base render function.
  */
 const createModifiedRenderFunc = (

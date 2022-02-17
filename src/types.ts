@@ -11,7 +11,7 @@ import {
 /**
  * The strategy for how to deal with the transformation of the component if a invalid root node was found.
  * wrap: wrap the "component" always with the "as" component
- * leave: leave the "component" alone and do nothing if the transformation wasn't sucessful
+ * leave: leave the "component" alone and do nothing if the transformation wasn't successful
  */
 export type Strategy = 'leave' | 'wrap';
 
@@ -27,13 +27,13 @@ export type OverwriteProps<CompProps = ComponentPropsDefault, AsProps = Componen
  * Options used to customize the component transformation process.
  */
 export interface Options<CompProps = ComponentPropsDefault, AsProps = ComponentPropsDefault> {
-  // The strategy how to continue in case the process would fail.
+  // The strategy how to continue in case the transformation process would fail.
   strategy: Strategy;
-  // Try to transform the component recursively in case its not possible after the first iteration
+  // Try to transform the component recursively if the transformation isn't successful after the first iteration.
   recursive: boolean;
-  // Whether to use cache.
+  // Whether to use cache instead of transforming already known results again.
   cache: boolean;
-  // A function which gets the props of both components as params and returns a tuple with the adapted props.
+  // A function which gets the props of both components as arguments and returns a object with the combined adapted props.
   overwriteProps: OverwriteProps<CompProps, AsProps>;
 }
 
