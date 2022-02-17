@@ -2,7 +2,7 @@
 Render react components as other components.
 [Try it on the playground](https://stackblitz.com/edit/react-as-playground)
 
-![Alt text](demo.png?raw=true "Demo Image")
+![Alt text](example.png?raw=true "Demo Image")
 
 ## Why?
 While developing with `react` I've experienced the need to adjust the tag or element type of my components. This was especially needed if I wanted the appearance of one component but the functionality of an other. Like rendering a `Link` as a `Button`, the link should have the functionality (and markup) of the `Link` component but the appearance of the `Button` component.
