@@ -130,7 +130,14 @@ describe('As Component', () => {
     const stringComponent = () => 'string';
     const fragmentComponent = () => <></>;
 
-    const invalidRootNodeComponents = [nullComponent, undefinedComponent, stringComponent, numberComponent, booleanComponent, fragmentComponent];
+    const invalidRootNodeComponents = [
+      nullComponent,
+      undefinedComponent,
+      stringComponent,
+      numberComponent,
+      booleanComponent,
+      fragmentComponent,
+    ];
 
     test('Wraps invalid root node components with strategy wrap', () => {
       const as = 'div';
@@ -226,8 +233,17 @@ describe('As Component', () => {
         type: 'class',
       },
     ].map(({ components, type }) => {
-      const componentConstructors = components.map(([component, tag, fixed]) => [component, tag, fixed, component?.props]);
-      const componentElements = componentConstructors.map(([component, tag, fixed]) => [component?.type || component, tag, fixed]);
+      const componentConstructors = components.map(([component, tag, fixed]) => [
+        component,
+        tag,
+        fixed,
+        component?.props,
+      ]);
+      const componentElements = componentConstructors.map(([component, tag, fixed]) => [
+        component?.type || component,
+        tag,
+        fixed,
+      ]);
       return {
         components: [...componentConstructors, ...componentElements],
         type,

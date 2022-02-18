@@ -1,5 +1,12 @@
 import React, { ReactElement, ReactNode, Component, createElement, Fragment } from 'react';
-import { isFunction, renderComponentOrComponentType, getTypeAndProps, getStrategyElement, getOverwrittenProps, isObject } from './utils';
+import {
+  isFunction,
+  renderComponentOrComponentType,
+  getTypeAndProps,
+  getStrategyElement,
+  getOverwrittenProps,
+  isObject,
+} from './utils';
 import {
   InputComponent,
   InputComponentProps,
@@ -30,29 +37,21 @@ type Transform = <C extends InputComponent, A extends InputComponent>(
 ) => ReturnType<AsComponent>;
 
 /**
- * Creates a modified version of the passed base render function
+ * Creates a modified version of the passed base render function.
  * @param renderFunc The base render function of the component.
- * @param as The "as" component type.
+ * @param componentTypeProps The component type and props tuple.
+ * @param asTypeProps The "as" component type and props tuble.
  * @param options The options for the transformation.
  * @returns A modified version of the passed base render function.
  */
-
-/**
- *
- * @param renderFunc
- * @param as
- * @param componentProps
- * @param asProps
- * @param options
- * @returns
- */
 const createModifiedRenderFunc = (
   renderFunc: CallableComponentType | (() => ReactNode),
-  as: ComponentType,
-  componentProps: ComponentPropsDefault,
-  asProps: ComponentPropsDefault,
+  componentTypeProps: [ValidComponentType, ComponentPropsDefault],
+  asTypeProps: [ComponentType, ComponentPropsDefault],
   options: Omit<Options, 'overwriteProps'>
 ): CallableComponentType => {
+  const [componentType, componentProps] = componentTypeProps;
+  const [asType, asProps] = asTypeProps;
   const { strategy, recursive } = options;
   // Note: this function must NOT be an arrow function because the "this" context matters
   // eslint-disable-next-line react/display-name
@@ -60,24 +59,26 @@ const createModifiedRenderFunc = (
     // @ts-ignore
     const rootElm: ReactNode = renderFunc?.apply?.(this, args);
     const validRootElm = isObject(rootElm);
-    const defaultType = validRootElm ? as : () => <Fragment>{rootElm}</Fragment>;
+    const defaultType = validRootElm ? asType : () => <Fragment>{rootElm}</Fragment>;
     const { props, type = defaultType } = validRootElm ? (rootElm as ReactElement) : { props: args[0] };
 
     if (isFunction(type) && recursive) {
-      return <As component={createElement(type, props)} as={as} options={options} />;
+      return <As component={createElement(type, props)} as={asType} options={options} />;
     }
 
-    const finalType = getStrategyElement(type, as, strategy);
+    const finalType = getStrategyElement(type, asType, strategy);
+    const passedComponentProps = finalType === componentType ? componentProps : {};
+    const passedAsProps = finalType === asType ? asProps : {};
     // @ts-ignore
-    return createElement(finalType, { ...(finalType === as ? asProps : componentProps), ...props });
+    return createElement(finalType, { ...passedComponentProps, ...passedAsProps, ...props });
   };
 };
 
 /**
  * Gets the modified component type.
- * @param componentType The component type.
- * @param asType The as component type.
- * @param options The options.
+ * @param componentTypeProps The component type and props tuple.
+ * @param asTypeProps The "as" component type and props tuble.
+ * @param options The options for the transformation.
  * @returns The modified component type.
  */
 const getModifiedComponentType = (
@@ -85,8 +86,8 @@ const getModifiedComponentType = (
   asTypeProps: [ComponentType, ComponentPropsDefault],
   options: Omit<Options, 'overwriteProps'>
 ): ComponentType => {
-  const [componentType, componentProps] = componentTypeProps;
-  const [asType, asProps] = asTypeProps;
+  const [componentType] = componentTypeProps;
+  const [asType] = asTypeProps;
   const isClassComponent = (componentType as any).prototype?.isReactComponent;
   const isFunctionComponent = isFunction(componentType);
 
@@ -104,13 +105,13 @@ const getModifiedComponentType = (
 
     // modify the render function of the new component
     const prototype = ModifiedClass.prototype;
-    prototype.render = createModifiedRenderFunc(prototype.render, asType, componentProps, asProps, options);
+    prototype.render = createModifiedRenderFunc(prototype.render, componentTypeProps, asTypeProps, options);
     return ModifiedClass;
   }
 
   return isFunctionComponent
     ? // create new component
-      createModifiedRenderFunc(componentType as CallableComponentType, asType, componentProps, asProps, options)
+      createModifiedRenderFunc(componentType as CallableComponentType, componentTypeProps, asTypeProps, options)
     : // choose from the input components depending on strategy
       getStrategyElement(componentType, asType, options.strategy);
 };

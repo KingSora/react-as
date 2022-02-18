@@ -1,9 +1,22 @@
-import { isValidElement, cloneElement, createElement, ExoticComponent, ForwardRefRenderFunction, ReactElement } from 'react';
-import { Strategy, ComponentType, ValidComponentType, InputComponent, InputComponentProps, OverwriteProps } from './types';
+import {
+  isValidElement,
+  cloneElement,
+  createElement,
+  ExoticComponent,
+  ForwardRefRenderFunction,
+  ReactElement,
+} from 'react';
+import {
+  Strategy,
+  ComponentType,
+  ValidComponentType,
+  InputComponent,
+  InputComponentProps,
+  OverwriteProps,
+} from './types';
 
 export const isString = (value: unknown): value is string => typeof value === 'string';
 export const isFunction = (value: unknown): value is (...args: any) => any => typeof value === 'function';
-export const isSymbol = (value: unknown): value is symbol => typeof value === 'symbol';
 export const isObject = (value: unknown): value is object => !!value && typeof value === 'object';
 
 /**
@@ -12,7 +25,9 @@ export const isObject = (value: unknown): value is object => !!value && typeof v
  * @returns A ReactElement which was created from the input.
  */
 export const renderComponentOrComponentType = (component?: InputComponent | null): ReactElement =>
-  isValidElement(component) ? cloneElement(component) : createElement(component as Exclude<InputComponent, JSX.Element>);
+  isValidElement(component)
+    ? cloneElement(component)
+    : createElement(component as Exclude<InputComponent, JSX.Element>);
 
 /**
  * Overwrites the passed props with the passed overwrite function.
@@ -37,7 +52,11 @@ export const getOverwrittenProps = <CompProps, AsProps>(
  * @param strategy The strategy.
  * @returns Either the component or "as" component type depending on the strategy.
  */
-export const getStrategyElement = (componentType: ComponentType, asType: ComponentType, strategy: Strategy): ComponentType => {
+export const getStrategyElement = (
+  componentType: ComponentType,
+  asType: ComponentType,
+  strategy: Strategy
+): ComponentType => {
   switch (strategy) {
     case 'leave': {
       return (isString(componentType) && asType) || componentType;
@@ -78,6 +97,8 @@ export const getTypeAndProps = <C extends InputComponent, B extends boolean>(
 
   return [
     finalType as B extends false ? ValidComponentType : ComponentType,
-    (props || (finalType as Exclude<ComponentType, string | ExoticComponent | ReactElement>).defaultProps || {}) as InputComponentProps<C>,
+    (props ||
+      (finalType as Exclude<ComponentType, string | ExoticComponent | ReactElement>).defaultProps ||
+      {}) as InputComponentProps<C>,
   ];
 };

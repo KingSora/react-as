@@ -63,6 +63,8 @@ export type ComponentPropsDefault = Record<string, unknown>;
 /**
  * Helper type to infer component props from the JSXElementConstructor or JSX.IntrinsicElements.
  */
-export type InputComponentProps<C extends InputComponent> = C extends JSXElementConstructor<any> | keyof JSX.IntrinsicElements
+export type InputComponentProps<C extends InputComponent> = C extends
+  | JSXElementConstructor<any>
+  | keyof JSX.IntrinsicElements
   ? ComponentProps<C>
   : ComponentPropsDefault;

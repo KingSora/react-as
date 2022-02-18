@@ -1,7 +1,7 @@
 {
   "name": "react-as",
   "author": "KingSora | Rene Haas",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Render react components as other components.",
   "license": "MIT",
   "repository": {
