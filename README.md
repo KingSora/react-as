@@ -17,7 +17,7 @@ While developing with `react` I've experienced the need to adjust the tag or ele
 
 ### How was this solved until now?
 
-The solution was to introduce an `component`, `tag` or `as` property to the components which had the appearance but not the functionality. In the `Link` and `Button` example the `Button` would receive such an property. Many popular libraries are doing like this: [MUI](https://mui.com/api/button/#props), [Ant Design](https://ant.design/components/button/#API), [react-bootstrap](https://react-bootstrap.github.io/components/buttons/#button-props). The problem is that if more components should receive the functionality of the `Link` component, the property needs to be re-implement over and over again for each component. And this is where `react-as` comes in! **Not only can `react-as` replicate the current solution, its also possible to give the `Link` component the `as` prop instead of the `Button`.**
+The solution was to introduce an `component`, `tag` or `as` property to the components which had the appearance but not the functionality. In the `Link` and `Button` example the `Button` would receive such an property. Many popular libraries are doing like this: [MUI](https://mui.com/api/button/#props), [Ant Design](https://ant.design/components/button/#API), [react-bootstrap](https://react-bootstrap.github.io/components/buttons/#button-props). The problem is that if more components should receive the functionality of the `Link` component, the property needs to be re-implement over and over again for each component. And this is where `react-as` comes in! **Not only can `react-as` replicate the current solution without re-implementing it over and over again, its also possible to give the `Link` component the `as` prop instead of the `Button`.**
 
 ## Usage
 
@@ -48,9 +48,9 @@ JSX elements have a type called `ElementType` or `ComponentType`. This type is r
 2. **exotic** type for special react elements like `Fragment`, `Context`, `Memo` etc.
 3. **custom** type for your own `Components`
 
-Simply put the library traverses the root elements of your component until it encounters a intrinsic element, because this means this is the deepest root element. The it creates a new custom render function where it changes the type of this element to your desired `as` component type. 
+Simply put the library traverses the root elements of your components until it encounters a intrinsic element, because this means this is the element which most likely should be transformed. It creates a new custom render function where it changes the type of this element to your desired `as` component type. 
 
-If the deepest root element is not an intrinsic type but something else, the transformation is considered unsuccessful and you can decide with the `strategy` option how to handle the case. 
+If during the traversal no intrinsic element type could be found, the transformation is considered unsuccessful and you can decide with the `strategy` option how to handle the case. 
 
 ## API
 
