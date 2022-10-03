@@ -19,6 +19,10 @@ While developing with `react` I've experienced the need to adjust the tag or ele
 
 The solution was to introduce an `component`, `tag` or `as` property to the components which had the appearance but not the functionality. In the `Link` and `Button` example the `Button` would receive such an property. Many popular libraries are doing like this: [MUI](https://mui.com/api/button/#props), [Ant Design](https://ant.design/components/button/#API), [react-bootstrap](https://react-bootstrap.github.io/components/buttons/#button-props). The problem is that if more components should receive the functionality of the `Link` component, the property needs to be re-implement over and over again for each component. And this is where `react-as` comes in! **Not only can `react-as` replicate the current solution without re-implementing it over and over again, its also possible to give the `Link` component the `as` prop instead of the `Button`.**
 
+### Similar approeaches
+
+Until now I've only encountered the [Radix UI Primitves](https://github.com/radix-ui/primitives) library which uses this approach with their `asChild` component property.
+
 ## Usage
 
 The package comes with the `As` react component and the `transform` function. Both are exactly the same, but you can choose when to use what.
